@@ -1,7 +1,13 @@
 language: node_js
 
 node_js:
-  - 10.16.0
+ - 10.16.0
+  
+install:
+ - npm i axios node-spotify-api prompts moments dotenv
 
-before_script:
-  - npm i axios node-spotify-api prompts moments
+script:
+ - node liri3.js
+  
+after_success:
+ - console.log("Success")
