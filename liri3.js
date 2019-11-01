@@ -1,12 +1,12 @@
-require("./lib/node_modules/dotenv").config();
-const moment = require('./node_modules/moment');
+require("dotenv").config();
+const moment = require('moment');
 const keys = require("./keys.js");
-const Spotify = require("./lib/node_modules/node-spotify-api");
+const Spotify = require("node-spotify-api");
 const spotify = new Spotify(keys.spotify);
-const axios = require("./lib/node_modules/axios");
+const axios = require("axios");
 const prompts = require('prompts');
 const fs = require('fs');
-// var response = {
+var response1 = [];
 //   liriCommand: "",
 //   userInput: ""
 // }
@@ -60,19 +60,35 @@ var questions = [{
          if (err) {
            throw err
          }
-         var comma = data.indexOf(',');
-         var apost = comma + 1;
-         const fileDo = data.slice(0, comma);
-         const fileUI = data.slice(apost);
-         return fileDo, fileUI;
+         var first = data.indexOf('"');
+         var second = data.indexOf('"', first + 1);
+         var third = data.indexOf('"', second + 1);
+         var fourth =  data.indexOf('"', third + 1);
+         console.log(first, second,third, fourth)
+         var liriCommand = data.slice(first + 1, second);
+         var userInput = data.slice(third + 1, fourth);
+       // return fileDo, fileUI;
+         // console.log(liriCommand + "  " + userInput);
+      return [liriCommand, userInput];
+        // return response1;
        });
-       console.log(fileDo + "  " + fileUI);
-
+       console.log(file + "13");
+       // console.log(fileDo + "  " + fileUI);
+// return response1;
+console.log(file , "1");
      }
+console.log(file, "2");
+// console.log(liriCommand, " lol");
+if (response.liriCommand == "do-what-it-says"){
+  liriCommand = response1[0];
+  userInput = response1[1];
+} else{
+liriCommand = response.liriCommand;
+userInput = response.userInput;
+}
 
-console.log(liriCommand, " lol");
-
-// var liriCommand = response.liriCommand;
+console.log(liriCommand +"" + userInput + " 4");
+// console.log(liriCommand, " lol  ", userInput)
 // ));
     // console.log(response);
     // var liriCommand = response.liriCommand;
@@ -114,10 +130,9 @@ console.log(liriCommand, " lol");
 
 // function liri(liriCommand, response, userInput){
     switch (liriCommand) {
-      case "concert-this":
-        var term = data.userInput;
-        var userInput = term.replace(/ /gi, "");
-        var bandsURL = "https://rest.bandsintown.com/artists/" + userInput + "/events?app_id=codingbootcamp"
+      case "concert-this" || 'concert-this':
+        var newUserInput = userInput.replace(/ /gi, "");
+        var bandsURL = "https://rest.bandsintown.com/artists/" + newUserInput + "/events?app_id=codingbootcamp"
         console.log(bandsURL);
 
 
@@ -140,8 +155,7 @@ console.log(liriCommand, " lol");
           });
         break;
 
-      case "spotify-this-song":
-        userInput = response.song;
+      case "spotify-this-song" || 'spotify-this-song':
 
         spotify.search({
             type: 'track',
@@ -163,13 +177,13 @@ console.log(liriCommand, " lol");
         break;
 
       case "movie-this":
-        term = response.movie;
-        userInput = term.replace(/ /gi, "+");
-        console.log(userInput);
-        const omdbUrl = "http://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=trilogy"
+        var newUserInput = userInput.replace(/ /gi, "+");
+        console.log(newUserInput);
+        const omdbUrl = "http://www.omdbapi.com/?t=" + newUserInput + "&y=&plot=short&apikey=trilogy"
         // + omdbID;
         axios.get(omdbUrl)
           .then(function(response) {
+            console.log(response);
             var info = response.data;
             var movieTitle = info.Title;
             var movieYear = info.Year;
@@ -226,8 +240,7 @@ console.log(liriCommand, " lol");
 // })
 // liri(liriCommand, response, userInput);
 
-}();
-
+})();
 
 // liriCase(liriCommand, response);
   // inquirer.prompt([
