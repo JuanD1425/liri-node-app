@@ -90,14 +90,6 @@ function spot(ans) {
       let albumName = info.album["name"];
       let previewURL = "http://open.spotify.com/track/" + songID;
 
-      spotify
-        .request("http://open.spotify.com/track/" + songID)
-        .then(function(data) {
-          console.log(data);
-        })
-        .catch(function(err) {
-          console.error("Error occurred: " + err);
-        });
       console.log(
         "\n\nArtist(s): " +
           artistName +
