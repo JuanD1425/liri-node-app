@@ -7,39 +7,79 @@ const axios = require("axios");
 const ask = require("inquirer");
 const fs = require("fs");
 
-function rf() {
-  fs.readFile("./random.txt", "utf8", function(err, data) {
-    if (err) {
-      return console.log(err);
-    }
-    let arrayD = data.split(",");
-    for (let i = 0; i < arrayD.length; i++) {
-      console.log(arrayD[i]);
-    }
-    let command = arrayD[0];
-    let query = arrayD[1];
-    if (command[0] === "concert-this") {
-      concert(query);
-    } else if (command === "spotify-this-song") {
-      spot(query);
-    } else if (command === "movie-this") {
-      movie(query);
-    } else {
-      console.log("Sorry something went wrong, restart");
-    }
-  });
-}
 const searchTopic = {
-  type: "list",
-  name: "command",
-  message: "Please select one of these topics to search:",
-  choices: [
-    "concert-this",
-    "spotify-this-song",
-    "movie-this",
-    "do-what-it-wants"
-  ]
+    type: "list",
+    name: "command",
+    message: "Please select one of these topics to search:",
+    choices: [
+        "concert-this",
+        "spotify-this-song",
+        "movie-this",
+        "do-what-it-wants"
+    ]
 };
+
+function searchQuery() {
+    ask
+        .prompt(searchTopic)
+        .then(function(answer) {
+            let ans = answer.command;
+            searches(ans);
+        })
+        .catch(err => console.log(err));
+}
+
+function searches(answer) {
+    switch (answer) {
+        case "concert-this":
+            ask
+                .prompt({
+                    type: "input",
+                    name: "artist",
+                    message: "Please type the name of the artist you would like to see:"
+                })
+                .then(function(response) {
+                    concert(response.artist);
+                })
+
+                .catch(function(err) {
+                    console.log(err);
+                });
+            break;
+        case "spotify-this-song":
+            ask
+                .prompt({
+                    type: "input",
+                    name: "query",
+                    message: "Please type the title of the song:"
+                })
+                .then(function(response) {
+                    spot(response.query);
+                })
+                .catch(function(err) {
+                    console.log(err);
+                });
+
+            break;
+        case "movie-this":
+            ask
+                .prompt({
+                    type: "input",
+                    name: "query",
+                    message: "Please type the title of the movie:"
+                })
+                .then(function(response) {
+                    movie(response.query);
+                })
+                .catch(function(err) {
+                    console.log(err);
+                });
+
+            break;
+        case "do-what-it-wants":
+            rf();
+    }
+}
 
 function concert(response) {
   let query = response.replace(/ /gi, "");
@@ -76,6 +116,7 @@ function concert(response) {
       console.log(err);
     });
 }
+
 function spot(ans) {
   spotify
     .search({
@@ -106,6 +147,7 @@ function spot(ans) {
       console.log(err);
     });
 }
+
 function movie(query) {
   let userInput = query.replace(/ /gi, "+");
   const omdbUrl =
@@ -149,65 +191,27 @@ function movie(query) {
     });
 }
 
-function searchQuery() {
-  ask
-    .prompt(searchTopic)
-    .then(function(answer) {
-      let ans = answer.command;
-      searches(ans);
-    })
-    .catch(err => console.log(err));
+function rf() {
+    fs.readFile("./random.txt", "utf8", function(err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        let arrayD = data.split(",");
+        for (let i = 0; i < arrayD.length; i++) {
+            console.log(arrayD[i]);
+        }
+        let command = arrayD[0];
+        let query = arrayD[1];
+        if (command[0] === "concert-this") {
+            concert(query);
+        } else if (command === "spotify-this-song") {
+            spot(query);
+        } else if (command === "movie-this") {
+            movie(query);
+        } else {
+            console.log("Sorry something went wrong, restart");
+        }
+    });
 }
 
-function searches(answer) {
-  switch (answer) {
-    case "concert-this":
-      ask
-        .prompt({
-          type: "input",
-          name: "artist",
-          message: "Please type the name of the artist you would like to see:"
-        })
-        .then(function(response) {
-          concert(response.artist);
-        })
-
-        .catch(function(err) {
-          console.log(err);
-        });
-      break;
-    case "spotify-this-song":
-      ask
-        .prompt({
-          type: "input",
-          name: "query",
-          message: "Please type the title of the song:"
-        })
-        .then(function(response) {
-          spot(response.query);
-        })
-        .catch(function(err) {
-          console.log(err);
-        });
-
-      break;
-    case "movie-this":
-      ask
-        .prompt({
-          type: "input",
-          name: "query",
-          message: "Please type the title of the movie:"
-        })
-        .then(function(response) {
-          movie(response.query);
-        })
-        .catch(function(err) {
-          console.log(err);
-        });
-
-      break;
-    case "do-what-it-wants":
-      rf();
-  }
-}
 searchQuery();
