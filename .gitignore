@@ -1,6 +1,5 @@
 node_modules
 .DS_Store
 .env
-liri3.js
 .iml
 .idea
