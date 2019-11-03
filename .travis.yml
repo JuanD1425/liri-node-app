@@ -4,10 +4,10 @@ node_js:
  - 10.16.0
   
 install:
- - npm i axios node-spotify-api prompts moments dotenv
+ - npm i axios node-spotify-api inquirer moments dotenv
 
 script:
- - node liri3.js
+ - node liriNew.js
   
 after_success:
  - console.log("Success")
