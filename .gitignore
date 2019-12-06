@@ -1,4 +1,4 @@
-node_modules
+node_modules/
 .DS_Store
 .env
 .iml
@@ -10,3 +10,5 @@ node_modules
 pnpm-lock.yaml
 roodles.conf.js
 yarn.lock
+liriNew.js
+liri-node-app.iml

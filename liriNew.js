@@ -9,14 +9,10 @@ const fs = require("fs");
 
 const searchTopic = {
     type: "list",
+
     name: "command",
     message: "Please select one of these topics to search:",
-    choices: [
-        "concert-this",
-        "spotify-this-song",
-        "movie-this",
-        "do-what-it-wants"
-    ]
+    choices: ["concert-this", "spotify-this-song", "movie-this", "do-what-it-wants"]
 };
 
 function searchQuery() {
@@ -42,9 +38,9 @@ function searches(answer) {
                     concert(response.artist);
                 })
 
-                .catch(function(err) {
-                    console.log(err);
-                });
+            .catch(function(err) {
+                console.log(err);
+            });
             break;
         case "spotify-this-song":
             ask
@@ -82,113 +78,104 @@ function searches(answer) {
 }
 
 function concert(response) {
-  let query = response.replace(/ /gi, "");
-  let bandsURL =
-    "https://rest.bandsintown.com/artists/" +
-    query +
-    "/events?app_id=codingbootcamp";
-  axios
-    .get(bandsURL)
-    .then(function(response) {
-      let info = response.data;
-      // console.log(info);
-      for (let i = 0; i < info.length; i++) {
-        let eventTime = moment(info[i].datetime).format("MM/DD/YY");
-        let place = info[i].venue;
-        let venue = place.name;
-        let location =
-          "\n\nLocation: " +
-          place.city +
-          ", " +
-          place.region +
-          "\n          " +
-          place.country;
-        console.log(
-          "==================================\n\n   Venue: " +
-            venue +
-            location +
-            "\n\n     Date: " +
-            eventTime
-        );
-      }
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
+    let query = response.replace(/ /gi, "");
+    let bandsURL = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp";
+    axios
+        .get(bandsURL)
+        .then(function(response) {
+            let info = response.data;
+            // console.log(info);
+            for (let i = 0; i < info.length; i++) {
+                let eventTime = moment(info[i].datetime).format("MM/DD/YY");
+                let place = info[i].venue;
+                let venue = place.name;
+                let location =
+                    "\n\nLocation: " + place.city + ", " + place.region + "\n          " + place.country;
+                console.log(
+                    "==================================\n\n   Venue: " +
+                    venue +
+                    location +
+                    "\n\n     Date: " +
+                    eventTime
+                );
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
 }
 
 function spot(ans) {
-  spotify
-    .search({
-      type: "track",
-      query: ans
-    })
-    .then(function(response) {
-      let info = response.tracks.items[0];
-      let artistName = info.album["artists"][0]["name"];
-      let songID = info.album["artists"][0]["id"];
-      let songName = info.name;
-      let albumName = info.album["name"];
-      let previewURL = "http://open.spotify.com/track/" + songID;
+    spotify
+        .search({
+            type: "track",
+            query: ans
+        })
+        .then(function(response) {
+            let info = response.tracks.items[0];
+            let artistName = info.album["artists"][0]["name"];
+            let songID = info.album["artists"][0]["id"];
+            let songName = info.name;
+            let albumName = info.album["name"];
+            let previewURL = "http://open.spotify.com/track/" + songID;
 
-      console.log(
-        "\n\nArtist(s): " +
-          artistName +
-          "\n\nSong: " +
-          songName +
-          "\n\nAlbum: " +
-          albumName +
-          "\n\nPreview: " +
-          previewURL +
-          "\n\n"
-      );
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
+            console.log(
+                "\n\nArtist(s): " +
+                artistName +
+                "\n\nSong: " +
+                songName +
+                "\n\nAlbum: " +
+                albumName +
+                "\n\nPreview: " +
+                previewURL +
+                "\n\n"
+            );
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
 }
 
 function movie(query) {
-  let userInput = query.replace(/ /gi, "+");
-  const omdbUrl =
-    "http://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=trilogy";
-  axios
-    .get(omdbUrl)
-    .then(function(response) {
-      // console.log(response);
-      let info = response.data;
-      let movieTitle = info.Title;
-      let movieYear = info.Year;
-      let imdbRating = info.Ratings[0].Value;
-      let rottenRating = info.Ratings[1].Value;
-      let country = info.Country;
-      let lang = info.Language;
-      let actors = info.Actors;
-      let plot = info.Plot;
+    let userInput = query.replace(/ /gi, "+");
+    const omdbUrl = "http://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=trilogy";
+    axios
+        .get(omdbUrl)
+        .then(function(response) {
+            // console.log(response);
+            let info = response.data;
+            let movieTitle = info.Title;
+            let movieYear = info.Year;
+            let imdbRating = info.Ratings[0].Value;
+            let rottenRating = info.Ratings[1].Value;
+            let country = info.Country;
+            let lang = info.Language;
+            let actors = info.Actors;
+            let plot = info.Plot;
 
-      console.log(
-        "\n\n    Movie Title: " +
-          movieTitle +
-          "\n\n   Release Year: " +
-          movieYear +
-          "\n\n    IMDB Rating: " +
-          imdbRating +
-          "\n\nRotten Tomatoes: " +
-          rottenRating +
-          "\n\n        Country: " +
-          country +
-          "\n\n       Language: " +
-          lang +
-          "\n\n         Actors: " +
-          actors +
-          "\n\n           Plot: " +
-          plot +
-          "\n\n"
-      );
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
+            console.log(
+                "\n\n    Movie Title: " +
+                movieTitle +
+                "\n\n   Release Year: " +
+                movieYear +
+                "\n\n    IMDB Rating: " +
+                imdbRating +
+                "\n\nRotten Tomatoes: " +
+                rottenRating +
+                "\n\n        Country: " +
+                country +
+                "\n\n       Language: " +
+                lang +
+                "\n\n         Actors: " +
+                actors +
+                "\n\n           Plot: " +
+                plot +
+                "\n\n"
+            );
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
 }
 
 function rf() {
